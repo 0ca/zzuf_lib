@@ -1,6 +1,18 @@
+# Linux library HOWTO
+
+```
+git clone https://github.com/0ca/zzuf_windows_lib
+cd zzuf_windows_lib
+./bootstrap
+./configure [CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32] for 32bits in 64bits
+./make
+```
+Library `libzzuf.so` will be at `src/.libs`
+
 # zzuf_windows_lib
 A zzuf library version compiled in windows, plus a python wrapper:
 https://git.soma.salesforce.com/foca/zzuf_windows_lib/tree/master/msvc/Debug
+
 
 # Original readme
  About zzuf:
