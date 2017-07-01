@@ -22,5 +22,6 @@ extern void _zz_list(char const *);
 extern void zzuf_protect_range(char const *);
 extern void zzuf_refuse_range(char const *);
 
+extern void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len);
 extern void _zz_fuzz(int, volatile uint8_t *, int64_t);
 

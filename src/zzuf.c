@@ -17,27 +17,6 @@
 
 #include "config.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef _WIN32
-#  ifdef MODULE_API_EXPORTS
-#    define MODULE_API __declspec(dllexport)
-#  else
-#    define MODULE_API __declspec(dllimport)
-#  endif
-#else
-#  define MODULE_API
-#endif
-
-MODULE_API int module_init();
-
-#ifdef __cplusplus
-}
-#endif
-
-
 #define _INCLUDE_POSIX_SOURCE /* for STDERR_FILENO on HP-UX */
 #define _POSIX_SOURCE /* for kill() on glibc systems */
 #define _BSD_SOURCE /* for setenv() on glibc systems */
@@ -157,7 +136,7 @@ static void usage(void);
 static zzuf_mutex_t pipe_mutex = 0;
 #endif
 
-MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len);
+//MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len);
 
 int main(int argc, char *argv[])
 {
@@ -683,6 +662,7 @@ static void loop_stdin(zzuf_opts_t *opts)
     _zz_unregister(0);
 }
 
+/*
 MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
 {
 	//Setting the ratio
@@ -696,7 +676,7 @@ MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
 	_zz_fuzz(0, buffer, len);
 	_zz_unregister(0);
 }
-
+*/
 
 static void finfo(FILE *fp, zzuf_opts_t *opts, uint32_t seed)
 {

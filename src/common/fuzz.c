@@ -38,6 +38,20 @@
 #define MAGIC2 0x783bc31f
 #define MAGIC3 0x9b5da2fb
 
+MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
+{
+        //Setting the ratio
+        zzuf_set_ratio(ratio, ratio);
+        //Setting the seed
+        zzuf_set_seed(seed);
+        //Initializating
+        _zz_fd_init();
+        _zz_register(0);
+        //Fuzzing our buffer
+        _zz_fuzz(0, buffer, len);
+        _zz_unregister(0);
+}
+
 /* Fuzzing mode */
 static enum fuzzing
 {

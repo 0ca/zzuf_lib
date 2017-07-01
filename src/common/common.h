@@ -38,6 +38,27 @@
 /* We use file descriptor 17 as the debug channel on Unix */
 #define DEBUG_FILENO 17
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef _WIN32
+#  ifdef MODULE_API_EXPORTS
+#    define MODULE_API __declspec(dllexport)
+#  else
+#    define MODULE_API __declspec(dllimport)
+#  endif
+#else
+#  define MODULE_API
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
 struct fuzz_context
 {
     uint32_t seed;
