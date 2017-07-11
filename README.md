@@ -1,6 +1,7 @@
 # Linux library HOWTO
 
 ```
+sudo apt-get install python-dev
 git clone https://github.com/0ca/zzuf_windows_lib
 cd zzuf_windows_lib
 ./bootstrap
@@ -27,8 +28,11 @@ Input: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 Output: !aaaaaaaaaaAaaaaaaaaaaa!aaaaaaaaaaaaaaaaaaaaaaaaaa�a!aaaeiaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaacaaaaa`aaaaaaaaaaaaaaaaiaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaeaAaeaaaqaeaa�aAcaaaaiaaaaaaaaaaaaaa
 ```
 
+Python bindings reference: https://en.wikibooks.org/wiki/Python_Programming/Extending_with_C
+
 # zzuf_windows_lib
 A zzuf library version compiled in windows, plus a python wrapper:
+
 
 # Original readme
  About zzuf:
@@ -41,4 +45,3 @@ For instructions and examples on how to use zzuf, see the manual page
 and the website at <http://caca.zoy.org/wiki/zzuf>.
 
 [![Build Status](https://travis-ci.org/samhocevar/zzuf.svg?branch=master)](https://travis-ci.org/samhocevar/zzuf)
-
