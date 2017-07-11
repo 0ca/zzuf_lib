@@ -38,7 +38,7 @@
 #define MAGIC2 0x783bc31f
 #define MAGIC3 0x9b5da2fb
 
-MODULE_API void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
+void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
 {
         //Setting the ratio
         zzuf_set_ratio(ratio, ratio);
