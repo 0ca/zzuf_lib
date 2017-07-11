@@ -425,8 +425,8 @@ static int const shuffle[256] =
         /* backup the internal stream buffer and replace it with
  * some random data in order to detect possible changes. */ \
  uint8_t seed = shuffle[fd & 0xff]; \
- /*uint8_t oldbuf[oldoff + oldcnt]; //Dynamic arrays not supported in VC*/ \
- uint8_t *oldbuf = (uint8_t *)_alloca(sizeof(uint8_t)*oldoff + oldcnt); \
+ uint8_t oldbuf[oldoff + oldcnt]; /*Dynamic arrays not supported in VC*/ \
+ /*uint8_t *oldbuf = (uint8_t *)_alloca(sizeof(uint8_t)*oldoff + oldcnt);*/ \
  uint8_t *buf = get_streambuf_base(stream); \
  for (int i = 0; i < oldoff + oldcnt; ++i) \
  { \

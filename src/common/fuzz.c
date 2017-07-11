@@ -33,6 +33,7 @@
 #if defined LIBZZUF
 #   include "debug.h"
 #endif
+#include <Python.h>
 
 #define MAGIC1 0x33ea84f7
 #define MAGIC2 0x783bc31f
@@ -51,6 +52,34 @@ void zzuf_fuzz_buffer(int seed, double ratio, char *buffer, int len)
         _zz_fuzz(0, buffer, len);
         _zz_unregister(0);
 }
+
+static PyObject* fuzz_buffer(PyObject* self, PyObject* args)
+{
+    int seed;
+    double ratio;
+    const char* buffer;
+    int len;
+
+    if (!PyArg_ParseTuple(args, "idsi", &seed, &ratio, &buffer, &len))
+        return NULL;
+
+    //printf("Fuzzing %s!\n", buffer);
+    zzuf_fuzz_buffer(seed, ratio, buffer, len);
+    //printf("Result: %s\n", buffer);
+    return Py_BuildValue("s", buffer);
+}
+
+static PyMethodDef ZzufMethods[] =
+{
+     {"fuzz_buffer", fuzz_buffer, METH_VARARGS, "Greet somebody."},
+     {NULL, NULL, 0, NULL}
+};
+
+PyMODINIT_FUNC initlibzzuf(void)
+{
+     (void) Py_InitModule("libzzuf", ZzufMethods);
+}
+
 
 /* Fuzzing mode */
 static enum fuzzing

@@ -31,16 +31,16 @@ EXTRA_DIST = \
     util/regex.cpp util/regex.h
 
 zzuf_SOURCES = $(ZZUF) $(COMMON)
-zzuf_CFLAGS = -DLIBDIR=\"$(libdir)/zzuf\" -I$(srcdir)/common
-zzuf_LDFLAGS = $(MATH_LIBS) $(WINSOCK2_LIBS)
+zzuf_CFLAGS = -DLIBDIR=\"$(libdir)/zzuf\" -I$(srcdir)/common -I/usr/include/python2.7/
+zzuf_LDFLAGS = $(MATH_LIBS) $(WINSOCK2_LIBS) -lpython2.7
 zzuf_DEPENDENCIES = libzzuf.la
 
 zzat_SOURCES = $(ZZAT)
 zzat_LDFLAGS =
 
 libzzuf_la_SOURCES = $(LIBZZUF) $(COMMON)
-libzzuf_la_CFLAGS = -DLIBZZUF -I$(srcdir)/libzzuf -I$(srcdir)/common
-libzzuf_la_LDFLAGS = -avoid-version -no-undefined $(DLL_LDFLAGS)
+libzzuf_la_CFLAGS = -DLIBZZUF -I$(srcdir)/libzzuf -I$(srcdir)/common -I/usr/include/python2.7/
+libzzuf_la_LDFLAGS = -avoid-version -no-undefined $(DLL_LDFLAGS) -lpython2.7
 libzzuf_la_LIBADD = $(DL_LIBS) $(MATH_LIBS) $(WINSOCK2_LIBS)
 
 echo-sources: ; echo $(SOURCES)
