@@ -55,7 +55,7 @@
 #	include <libgen.h>
 #endif
 #if _WIN32
-//#	define alloca _alloca
+#	define alloca _alloca
 #else
 #	include <alloca.h>
 #endif

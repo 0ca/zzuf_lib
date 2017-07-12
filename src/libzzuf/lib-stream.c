@@ -407,6 +407,9 @@ static int const shuffle[256] =
  * check the data for changes after the fseek() call.
  */
 
+ /*Dynamic arrays not supported in VC
+ can't to ifdef inside a macro. https://stackoverflow.com/questions/7246512/ifdef-inside-a-macro*/
+#ifdef _WIN32
 #define ZZ_FSEEK(myfseek) \
     do \
 		    { \
@@ -422,50 +425,111 @@ static int const shuffle[256] =
         int oldoff = get_streambuf_offset(stream); \
         int oldcnt = get_streambuf_count(stream); \
         \
-        /* backup the internal stream buffer and replace it with
- * some random data in order to detect possible changes. */ \
- uint8_t seed = shuffle[fd & 0xff]; \
- uint8_t oldbuf[oldoff + oldcnt]; /*Dynamic arrays not supported in VC*/ \
- /*uint8_t *oldbuf = (uint8_t *)_alloca(sizeof(uint8_t)*oldoff + oldcnt);*/ \
- uint8_t *buf = get_streambuf_base(stream); \
- for (int i = 0; i < oldoff + oldcnt; ++i) \
- { \
- oldbuf[i] = buf[i]; \
- buf[i] = shuffle[(i + seed) & 0xff]; \
- } \
- \
- _zz_lockfd(fd); \
- ret = ORIG(myfseek)(stream, offset, whence); \
- _zz_unlock(fd); \
- \
- int64_t newpos = ZZ_FTELL(stream); \
- int newoff = get_streambuf_offset(stream); \
- int newcnt = get_streambuf_count(stream); \
- int changed = (newpos > oldpos + oldcnt || newpos < oldpos - oldoff \
- || (newpos == oldpos + oldcnt && newcnt != 0) \
- || (newoff + newcnt != oldoff + oldcnt)); \
- \
- /* check whether the buffer contents have changed */ \
- uint8_t *newbuf = get_streambuf_base(stream); \
- for (int i = 0; !changed && i < newoff + newcnt; ++i) \
-	 if (newbuf[i] != shuffle[(i + seed) & 0xff]) \
-		 changed = 1; \
-		 \
-		 /* if the internal buffer has not changed, restore it */ \
-		 if (!changed) \
-			 memcpy(newbuf, oldbuf, newoff + newcnt); \
-			 \
-        debug_stream(changed ? "modified" : "unchanged", stream); \
-        if (changed) \
-        { \
-            _zz_setpos(fd, newpos - get_streambuf_offset(stream)); \
-            _zz_fuzz(fd, get_streambuf_base(stream), get_streambuf_size(stream)); \
-        } \
-        _zz_setpos(fd, newpos); \
-        debug_stream("after", stream); \
-        debug("%s([%i], %lli, %s) = %i", __func__, \
-              fd, (long long int)offset, get_seek_mode_name(whence), ret); \
+        /* backup the internal stream buffer and replace it with \
+          * some random data in order to detect possible changes. */ \
+         uint8_t seed = shuffle[fd & 0xff]; \
+         uint8_t *oldbuf = (uint8_t *)_alloca(sizeof(uint8_t)*oldoff + oldcnt); \
+         uint8_t *buf = get_streambuf_base(stream); \
+         for (int i = 0; i < oldoff + oldcnt; ++i) \
+         { \
+         oldbuf[i] = buf[i]; \
+         buf[i] = shuffle[(i + seed) & 0xff]; \
+         } \
+         \
+         _zz_lockfd(fd); \
+         ret = ORIG(myfseek)(stream, offset, whence); \
+         _zz_unlock(fd); \
+         \
+         int64_t newpos = ZZ_FTELL(stream); \
+         int newoff = get_streambuf_offset(stream); \
+         int newcnt = get_streambuf_count(stream); \
+         int changed = (newpos > oldpos + oldcnt || newpos < oldpos - oldoff \
+         || (newpos == oldpos + oldcnt && newcnt != 0) \
+         || (newoff + newcnt != oldoff + oldcnt)); \
+         \
+         /* check whether the buffer contents have changed */ \
+         uint8_t *newbuf = get_streambuf_base(stream); \
+         for (int i = 0; !changed && i < newoff + newcnt; ++i) \
+	         if (newbuf[i] != shuffle[(i + seed) & 0xff]) \
+		         changed = 1; \
+		         \
+		         /* if the internal buffer has not changed, restore it */ \
+		         if (!changed) \
+			         memcpy(newbuf, oldbuf, newoff + newcnt); \
+			         \
+                debug_stream(changed ? "modified" : "unchanged", stream); \
+                if (changed) \
+                { \
+                    _zz_setpos(fd, newpos - get_streambuf_offset(stream)); \
+                    _zz_fuzz(fd, get_streambuf_base(stream), get_streambuf_size(stream)); \
+                } \
+                _zz_setpos(fd, newpos); \
+                debug_stream("after", stream); \
+                debug("%s([%i], %lli, %s) = %i", __func__, \
+                      fd, (long long int)offset, get_seek_mode_name(whence), ret); \
     } while (0)
+#else
+#define ZZ_FSEEK(myfseek) \
+    do \
+		    { \
+        LOADSYM(myfseek); \
+        \
+        int fd = fileno(stream); \
+        if (!must_fuzz_fd(fd)) \
+            return ORIG(myfseek)(stream, offset, whence); \
+        \
+        debug_stream("before", stream); \
+        /* FIXME: ftell() will return -1 on a pipe such as stdin */ \
+        int64_t oldpos = ZZ_FTELL(stream); \
+        int oldoff = get_streambuf_offset(stream); \
+        int oldcnt = get_streambuf_count(stream); \
+        \
+        /* backup the internal stream buffer and replace it with \
+          * some random data in order to detect possible changes. */ \
+         uint8_t seed = shuffle[fd & 0xff]; \
+         uint8_t oldbuf[oldoff + oldcnt]; \
+         uint8_t *buf = get_streambuf_base(stream); \
+         for (int i = 0; i < oldoff + oldcnt; ++i) \
+         { \
+         oldbuf[i] = buf[i]; \
+         buf[i] = shuffle[(i + seed) & 0xff]; \
+         } \
+         \
+         _zz_lockfd(fd); \
+         ret = ORIG(myfseek)(stream, offset, whence); \
+         _zz_unlock(fd); \
+         \
+         int64_t newpos = ZZ_FTELL(stream); \
+         int newoff = get_streambuf_offset(stream); \
+         int newcnt = get_streambuf_count(stream); \
+         int changed = (newpos > oldpos + oldcnt || newpos < oldpos - oldoff \
+         || (newpos == oldpos + oldcnt && newcnt != 0) \
+         || (newoff + newcnt != oldoff + oldcnt)); \
+         \
+         /* check whether the buffer contents have changed */ \
+         uint8_t *newbuf = get_streambuf_base(stream); \
+         for (int i = 0; !changed && i < newoff + newcnt; ++i) \
+	         if (newbuf[i] != shuffle[(i + seed) & 0xff]) \
+		         changed = 1; \
+		         \
+		         /* if the internal buffer has not changed, restore it */ \
+		         if (!changed) \
+			         memcpy(newbuf, oldbuf, newoff + newcnt); \
+			         \
+                debug_stream(changed ? "modified" : "unchanged", stream); \
+                if (changed) \
+                { \
+                    _zz_setpos(fd, newpos - get_streambuf_offset(stream)); \
+                    _zz_fuzz(fd, get_streambuf_base(stream), get_streambuf_size(stream)); \
+                } \
+                _zz_setpos(fd, newpos); \
+                debug_stream("after", stream); \
+                debug("%s([%i], %lli, %s) = %i", __func__, \
+                      fd, (long long int)offset, get_seek_mode_name(whence), ret); \
+    } while (0)
+#endif
+
+
 
 #if HAVE_FPOS64_T
 #   define FPOS_T_TO_INT64_T(x) ((int64_t)FPOS64_CAST(x))
