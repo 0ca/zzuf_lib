@@ -236,7 +236,7 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD reason, PVOID impLoad)
     switch (reason)
     {
         case DLL_PROCESS_ATTACH:
-            libzzuf_init();
+            //libzzuf_init();
             break;
         case DLL_PROCESS_DETACH:
             //libzzuf_fini();

@@ -129,10 +129,11 @@ void _zz_fuzz(int fd, volatile uint8_t *buf, int64_t len)
 {
     int64_t pos = _zz_getpos(fd);
 
-#if defined LIBZZUF
-    debug2("... fuzz(%i, @%lli, %lli)", fd, (long long int)pos,
-           (long long int)len);
-#endif
+// We don't need this
+//#if defined LIBZZUF
+//    debug2("... fuzz(%i, @%lli, %lli)", fd, (long long int)pos,
+//           (long long int)len);
+//#endif
 
     volatile uint8_t *aligned_buf = buf - pos;
     fuzz_context_t *fuzz = _zz_getfuzz(fd);

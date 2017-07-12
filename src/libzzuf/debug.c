@@ -103,6 +103,7 @@ abort:
 
 void zzuf_debug2(char const *format, ...)
 {
+    return;
     va_list args;
     char buf[0x100];
     DWORD written;
