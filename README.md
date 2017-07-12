@@ -1,14 +1,17 @@
-# Linux library HOWTO
+# How To compile and use it:
+You need to use Python 2.7 libraries to compile it. Python 3.X won't work without modifying the C++ code.
+
+## Linux 
 
 ```
-sudo apt-get install python-dev
+sudo apt-get install python2.7-dev
 git clone https://github.com/0ca/zzuf_windows_lib
 cd zzuf_windows_lib
 ./bootstrap
 ./configure [CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32] for 32bits in 64bits
 make
 ```
-Note: Maybe in the future we need to modify the path of the python includes in `src/Makefile.am`. Currently is: `-I/usr/include/python2.7/`
+Note: Maybe in the future we need to modify the path of the python includes in `src/Makefile.am`. Currently is: `-I/usr/include/python2.7/` Other option is using `CFLAGS=-I/path/python2.7/`.
 
 Library `libzzuf.so` will be at `src/.libs`
 
@@ -27,6 +30,10 @@ python libfuzz_test.py
 Input: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 Output: !aaaaaaaaaaAaaaaaaaaaaa!aaaaaaaaaaaaaaaaaaaaaaaaaa�a!aaaeiaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaacaaaaa`aaaaaaaaaaaaaaaaiaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaeaAaeaaaqaeaa�aAcaaaaiaaaaaaaaaaaaaa
 ```
+
+## Windows
+Use the Visual Studio project present in `msvc`.
+
 
 Python bindings reference: https://en.wikibooks.org/wiki/Python_Programming/Extending_with_C
 
