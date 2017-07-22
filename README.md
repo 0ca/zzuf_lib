@@ -12,6 +12,10 @@ cd zzuf_windows_lib
 make
 ```
 Note: Maybe in the future we need to modify the path of the python includes in `src/Makefile.am`. Currently is: `-I/usr/include/python2.7/` Other option is using `CFLAGS=-I/path/python2.7/`.
+Note2: For 32bits in a 64 bits OS you need to install the 32bits packages of libc, python and python-dev:
+```
+sudo apt-get install libc6-dev-i386 python:i386 python-dev:i386
+```
 
 Library `libzzuf.so` will be at `src/.libs`
 
