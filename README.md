@@ -35,6 +35,22 @@ Input: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 Output: !aaaaaaaaaaAaaaaaaaaaaa!aaaaaaaaaaaaaaaaaaaaaaaaaa�a!aaaeiaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaacaaaaa`aaaaaaaaaaaaaaaaiaaaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaeaAaeaaaqaeaa�aAcaaaaiaaaaaaaaaaaaaa
 ```
 
+## CentOs 32 bits
+First we need a dockerfile for centos 7 32 bits. We can have it following these steps:
+https://github.com/nunofernandes/docker-centos7-32bits
+
+I needed to modify one of the steps:
+```
+- docker export  centos7-32-run | tar xv tmp/centos7*bz2
++ docker export  centos7-32-run | tar xv --wildcards tmp/centos7*bz2
+```
+Then run /bin/bash in the instance and install dependencies:
+```
+yum install python-devel.i686 git automake libtool.i686 make
+```
+
+After that follow generic steps for linux.
+
 ## Windows
 Use the Visual Studio project present in `msvc`.
 
