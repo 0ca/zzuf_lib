@@ -63,9 +63,13 @@ static PyObject* fuzz_buffer(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "ids*", &seed, &ratio, &buffer))
         return NULL;
 
-    zzuf_fuzz_buffer(seed, ratio, buffer.buf, buffer.len);
+    //If we don't copy the string we used the original string passed as argument
+    //Python will free this buffer since we are returning a string using it
+    void *new_buffer = malloc(buffer.len);
+    memcpy(new_buffer, buffer.buf, buffer.len);
+    zzuf_fuzz_buffer(seed, ratio, new_buffer, buffer.len);
 
-    return Py_BuildValue("s#", buffer.buf, buffer.len); // can't create it with s*
+    return Py_BuildValue("s#", new_buffer, buffer.len); // can't create it with s*
 }
 
 static PyMethodDef ZzufMethods[] =
