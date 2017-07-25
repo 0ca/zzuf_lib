@@ -54,6 +54,7 @@ After that follow generic steps for linux.
 ## Windows
 Use the Visual Studio project present in `msvc`.
 
+Select Release (If you select debug, the compiler couldn't find Python27_d.lib). And add your Python includes directory to the C++ configuration and the Python27.lib to the linker configuration.
 
 Python bindings reference: https://en.wikibooks.org/wiki/Python_Programming/Extending_with_C
 
