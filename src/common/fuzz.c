@@ -69,7 +69,10 @@ static PyObject* fuzz_buffer(PyObject* self, PyObject* args)
     memcpy(new_buffer, buffer.buf, buffer.len);
     zzuf_fuzz_buffer(seed, ratio, new_buffer, buffer.len);
 
-    return Py_BuildValue("s#", new_buffer, buffer.len); // can't create it with s*
+    //The buffer gets coppied here
+    PyObject *ret_value = Py_BuildValue("s#", new_buffer, buffer.len); // can't create it with s*
+    free(new_buffer);
+    return ret_value;
 }
 
 static PyMethodDef ZzufMethods[] =
