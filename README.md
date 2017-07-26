@@ -51,6 +51,20 @@ yum install python-devel.i686 git automake libtool.i686 make
 
 After that follow generic steps for linux.
 
+## CentOs 64 bits
+We can use the official Docker repository to spin up a centos 7 x64 instance:
+```
+sudo docker pull centos
+sudo docker run -ti centos /bin/bash
+```
+
+Install dependencies:
+```
+yum install python-devel git automake libtool make
+```
+
+After that follow generic steps for linux.
+
 ## Windows
 Use the Visual Studio project present in `msvc`.
 
